@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Movement();
-        // Debug.DrawRay(transform.position, Vector3.down * 0.6f, Color.green);
     }
 
     private void Movement()
@@ -35,21 +34,19 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             IsGrounded();
-            if (!_isGrounded) { return; }
+            if (!IsGrounded()) { return; }
 
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
-            _isGrounded = false;
         }
     }
 
-    private void IsGrounded()
+    private bool IsGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.6f, 1 << 8);
         
-        if (hit.collider == null) return;
+        if (hit.collider == null) return false;
         
-        _isGrounded = true;
+        return true;
 
-        Debug.Log($"Collided with: {hit.collider.name}");
     }
 }
