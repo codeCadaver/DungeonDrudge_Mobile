@@ -8,23 +8,27 @@ public class Player : MonoBehaviour
     public static Action OnPlayerAttacked;
     public static Action<float> OnPlayerMoved;
     public static Action<bool> OnPlayerJumping;
-    
+
+    [SerializeField] private float _attackDelay = 0.2f;
     [SerializeField] private float _groundCheckDistance = 0.7f;
     [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _speed = 5f;
 
+    private bool _canAttack = true;
     private bool _canMove = true;
     private bool _isGrounded = false;
     private bool _resetJump = true;
-    // private PlayerAnimation _playerAnimation;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
+    private SpriteRenderer _swordArcSprite;
+    private Vector3 _localArcPos;
 
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        // _playerAnimation = GetComponent<PlayerAnimation>();
         _playerSprite = GetComponentInChildren<SpriteRenderer>();
+        _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        _localArcPos = _swordArcSprite.transform.localPosition;
     }
 
     private void Update()
@@ -58,12 +62,25 @@ public class Player : MonoBehaviour
         {
             if (IsGrounded())
             {
-                _canMove = false;
-                _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
-                OnPlayerAttacked?.Invoke();
+                if (_canAttack)
+                {
+                    StartCoroutine(AttackRoutine());
+                }
+                // _canMove = false;
+                // _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
+                // OnPlayerAttacked?.Invoke();
                 // _playerAnimation.Attack();
             }
         }
+    }
+
+    IEnumerator AttackRoutine()
+    {
+        _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
+        OnPlayerAttacked?.Invoke();
+        _canAttack = false;
+        yield return new WaitForSeconds(_attackDelay);
+        _canAttack = true;
     }
 
     public void CanMove()
@@ -107,7 +124,17 @@ public class Player : MonoBehaviour
     {
         if (speed != 0)
         {
+            Vector3 xPos = _localArcPos;
             _playerSprite.flipX = speed < 0 ? true : false;
+            _swordArcSprite.flipY = speed < 0 ? true : false;
+            xPos.x *= Mathf.Sign(speed) * _localArcPos.x;
+            
+            //TODO: adjust rotation of sword arc 
+            if (Mathf.Sign(speed) < 0)
+            {
+                xPos.x -= 0.3f;
+            }
+            _swordArcSprite.transform.localPosition = xPos;
         }
     }
 
