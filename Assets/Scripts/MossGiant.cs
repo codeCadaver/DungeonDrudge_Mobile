@@ -6,20 +6,18 @@ using UnityEngine.EventSystems;
 
 public class MossGiant : Enemy
 {
-    private string _animName = "MossGiant_Idle";
-    
-    private void Start()
+    protected override void Start()
     {
-        Init();
+        base.Start();
     } 
 
     public override void Update()
     {
-        Movement(movingRight, _animName);
+        base.Update();
     }
 
-    public override void Movement(bool direction, string animName)
+    public override void Movement(bool direction)
     {
-        base.Movement(direction, animName);
+        base.Movement(direction);
     }
 }

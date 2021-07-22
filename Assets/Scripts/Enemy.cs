@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public abstract class Enemy : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected int gems;
 
     [SerializeField] protected Transform start, end;
+
+    [SerializeField] protected string idleName;
 
     protected Animator animator;
     protected bool movingRight = true;
@@ -21,13 +24,21 @@ public abstract class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
     }
-    
-    public abstract void Update();
+
+    protected virtual void Start()
+    {
+        Init();
+    }
+
+    public virtual void Update()
+    {
+        Movement(movingRight);
+    }
     
 
-    public virtual void Movement(bool direction, string animName)
+    public virtual void Movement(bool direction)
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(animName))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(idleName))
         {
             return;
         }

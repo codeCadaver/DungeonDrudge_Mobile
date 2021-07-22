@@ -5,21 +5,18 @@ using UnityEngine.Timeline;
 
 public class Spider : Enemy
 {
-    private string _animName = "Spider_Idle";
-    
-    // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        Init();
+        base.Start();
     }
 
     public override void Update()
     {
-        Movement(movingRight, _animName);
+        base.Update();
     }
 
-    public override void Movement(bool direction, string animName)
+    public override void Movement(bool direction)
     {
-        base.Movement(direction, animName);
+        base.Movement(direction);
     }
 }
