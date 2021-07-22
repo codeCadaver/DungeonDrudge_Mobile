@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] protected int health;
-    [SerializeField] protected int speed;
     [SerializeField] protected int gems;
+    [SerializeField] protected float speed;
 
     [SerializeField] protected Transform start, end;
 

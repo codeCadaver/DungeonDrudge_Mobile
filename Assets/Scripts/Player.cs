@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _speed = 5f;
 
+    private Animator _animator;
     private bool _canAttack = true;
     private bool _canMove = true;
     private bool _isGrounded = false;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        _animator = GetComponentInChildren<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerSprite = GetComponentInChildren<SpriteRenderer>();
         _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
@@ -33,7 +35,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // Debug.Log(IsGrounded());
         Movement();
         Attack();
         Debug.DrawRay(transform.position, Vector3.down * _groundCheckDistance, Color.green);
@@ -41,6 +42,9 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
+        // Make sure Attack Animation isn't running in order to move player
+        _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
+        
         if (_canMove)
         {
             float move = Input.GetAxisRaw("Horizontal");
@@ -51,7 +55,6 @@ public class Player : MonoBehaviour
             FlipSprite(move);
             
             OnPlayerMoved?.Invoke(move);
-            // _playerAnimation.Move(move);
             
         }
     }
