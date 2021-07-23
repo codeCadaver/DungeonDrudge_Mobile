@@ -27,11 +27,7 @@ public class MossGiant : Enemy, IDamageable
     public override void Movement(bool direction)
     {
         base.Movement(direction);
-        if (animator.GetBool(combatHash) == true)
-        {
-            Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
-            sprite.flipX = playerDirection.x < 0 ? true : false;
-        }
+       
     }
 
     public void Damage()

@@ -80,6 +80,12 @@ public abstract class Enemy : MonoBehaviour
         {
             movingRight = false;
         }
+        
+        if (animator.GetBool(combatHash) == true)
+        {
+            Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
+            sprite.flipX = playerDirection.x < 0 ? true : false;
+        }
     }
 
     public void CheckPlayerDistance()
