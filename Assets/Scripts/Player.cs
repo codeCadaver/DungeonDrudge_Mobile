@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public static Action OnPlayerAttacked;
     public static Action<float> OnPlayerMoved;
     public static Action<bool> OnPlayerJumping;
+
+    public int Health { get; set; }
 
     [SerializeField] private float _attackDelay = 0.2f;
     [SerializeField] private float _groundCheckDistance = 0.7f;
@@ -139,6 +141,11 @@ public class Player : MonoBehaviour
             }
             _swordArcSprite.transform.localPosition = xPos;
         }
+    }
+
+    public void Damage()
+    {
+        Debug.Log("Player was damaged");
     }
 
     IEnumerator JumpDelayRoutine()
