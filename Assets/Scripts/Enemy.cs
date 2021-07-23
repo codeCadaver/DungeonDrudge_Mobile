@@ -12,10 +12,12 @@ public abstract class Enemy : MonoBehaviour
 
     [SerializeField] protected Transform start, end;
 
-    [SerializeField] protected string idleName;
+    [SerializeField] protected string idleName, hitName = "Hit";
 
     protected Animator animator;
     protected bool movingRight = true;
+    protected int combatHash = Animator.StringToHash("inCombat");
+    protected int hitHash = Animator.StringToHash("Hit");
     protected int idleHash = Animator.StringToHash("Idle");
     protected SpriteRenderer sprite;
 
@@ -39,6 +41,11 @@ public abstract class Enemy : MonoBehaviour
     public virtual void Movement(bool direction)
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName(idleName))
+        {
+            return;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(hitName))
         {
             return;
         }

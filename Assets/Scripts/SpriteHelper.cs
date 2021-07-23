@@ -55,10 +55,10 @@ public class SpriteHelper : MonoBehaviour
     public void AttackEnded()
     {
         OnAttackEnded?.Invoke();
-        foreach (var fx in _swordFX)
-        {
-            fx.SetActive(false);
-        }
+        // foreach (var fx in _swordFX)
+        // {
+        //     fx.SetActive(false);
+        // }
     }
 
     public void AttackBegan()
