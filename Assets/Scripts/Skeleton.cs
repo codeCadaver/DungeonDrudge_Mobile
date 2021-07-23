@@ -38,7 +38,8 @@ public class Skeleton : Enemy, IDamageable
         animator.SetBool(combatHash, true);
         if (Health <= 0)
         {
-            Destroy(this.gameObject);
+            animator.SetBool(combatHash, false);
+            animator.SetTrigger("Dead");
         }
     }
     
