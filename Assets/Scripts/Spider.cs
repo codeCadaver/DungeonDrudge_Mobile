@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class Spider : Enemy
+public class Spider : Enemy, IDamageable
 {
     protected override void Start()
     {
@@ -18,5 +18,12 @@ public class Spider : Enemy
     public override void Movement(bool direction)
     {
         base.Movement(direction);
+    }
+    
+    public int Health { get; set; }
+
+    public void Damage()
+    {
+        
     }
 }

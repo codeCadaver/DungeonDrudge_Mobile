@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MossGiant : Enemy
+public class MossGiant : Enemy, IDamageable
 {
+    public int Health { get; set; }
+    
     protected override void Start()
     {
         base.Start();
@@ -19,5 +21,10 @@ public class MossGiant : Enemy
     public override void Movement(bool direction)
     {
         base.Movement(direction);
+    }
+
+    public void Damage()
+    {
+        
     }
 }
