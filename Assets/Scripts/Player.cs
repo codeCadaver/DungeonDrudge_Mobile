@@ -25,6 +25,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool _resetJump = true;
     private CapsuleCollider2D _collider2D;
     private int _deathHash;
+    private int _diamonds;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private SpriteRenderer _swordArcSprite;
@@ -176,11 +177,19 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
+        Diamond.OnDiamondCollected += CollectDiamonds;
         SpriteHelper.OnAttackEnded += CanMove;
     }
 
     private void OnDisable()
     {
+        Diamond.OnDiamondCollected -= CollectDiamonds;
         SpriteHelper.OnAttackEnded -= CanMove;
+    }
+
+    private void CollectDiamonds(int value)
+    {
+        _diamonds += value;
+        Debug.Log($"Diamonds: {_diamonds}");
     }
 }
