@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class MossGiant : Enemy, IDamageable
 {
@@ -13,6 +14,7 @@ public class MossGiant : Enemy, IDamageable
     {
         base.Init();
         Health = base.health;
+        gems = Random.Range(minGems, maxGems);
     }
 
     protected override void Start()
@@ -44,6 +46,20 @@ public class MossGiant : Enemy, IDamageable
             animator.SetTrigger("Dead");
             IsAlive = false;
             base.isAlive = IsAlive;
+
+            StartCoroutine(SpawnDiamondsRoutine());
+        }
+    }
+    
+    IEnumerator SpawnDiamondsRoutine()
+    {
+        Vector3 randomOffset = transform.position;
+        while (gems > 0)
+        {
+            randomOffset.x += UnityEngine.Random.Range(-.3f, .3f);
+            Instantiate(diamondPrefab, randomOffset, Quaternion.identity);
+            gems -= 1;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

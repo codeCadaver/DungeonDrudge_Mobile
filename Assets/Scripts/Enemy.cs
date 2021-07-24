@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] protected int health;
-    [SerializeField] protected int gems;
+    [SerializeField] protected int minGems, maxGems;
     [SerializeField] protected float playerDetectionDistance = 2f;
     [SerializeField] protected float speed;
+    [SerializeField] protected GameObject diamondPrefab;
 
     [SerializeField] protected Transform start, end;
 
@@ -22,6 +24,7 @@ public abstract class Enemy : MonoBehaviour
     protected int combatHash = Animator.StringToHash("inCombat");
     protected int hitHash = Animator.StringToHash("Hit");
     protected int idleHash = Animator.StringToHash("Idle");
+    protected int gems;
     protected Player player;
     protected SpriteRenderer sprite;
 
@@ -30,6 +33,7 @@ public abstract class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+        
     }
 
     protected virtual void Start()
@@ -103,5 +107,4 @@ public abstract class Enemy : MonoBehaviour
             animator.SetBool(combatHash, false);
         }
     }
-
 }

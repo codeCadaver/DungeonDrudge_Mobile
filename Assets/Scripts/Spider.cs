@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Timeline;
+using Random = UnityEngine.Random;
+
 
 public class Spider : Enemy, IDamageable
 {
@@ -13,12 +14,14 @@ public class Spider : Enemy, IDamageable
     {
         base.Init();
         Health = base.health;
+        gems = Random.Range(minGems, maxGems);
     }
 
     protected override void Start()
     {
         base.Start();
         IsAlive = true;
+        Debug.Log($"gems: {gems}");
     }
 
     public override void Update()
@@ -43,6 +46,21 @@ public class Spider : Enemy, IDamageable
             animator.SetTrigger("Dead");
             IsAlive = false;
             base.isAlive = IsAlive;
+            
+            // Instantiate gem number of diamonds
+            StartCoroutine(SpawnDiamondsRoutine());
+        }
+    }
+
+    IEnumerator SpawnDiamondsRoutine()
+    {
+        Vector3 randomOffset = transform.position;
+        while (gems > 0)
+        {
+            randomOffset.x += UnityEngine.Random.Range(-.3f, .3f);
+            Instantiate(diamondPrefab, randomOffset, Quaternion.identity);
+            gems -= 1;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
