@@ -18,6 +18,7 @@ public abstract class Enemy : MonoBehaviour
     protected Animator animator;
     protected bool canMove = true;
     protected bool movingRight = true;
+    protected bool isAlive = true;
     protected int combatHash = Animator.StringToHash("inCombat");
     protected int hitHash = Animator.StringToHash("Hit");
     protected int idleHash = Animator.StringToHash("Idle");
@@ -38,6 +39,11 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void Update()
     {
+        if (isAlive == false)
+        {
+            return;
+        }
+        
         Movement(movingRight);
     }
     

@@ -9,18 +9,22 @@ public class Player : MonoBehaviour, IDamageable
     public static Action<float> OnPlayerMoved;
     public static Action<bool> OnPlayerJumping;
 
+    public bool IsAlive { get; set; }
     public int Health { get; set; }
 
     [SerializeField] private float _attackDelay = 0.2f;
     [SerializeField] private float _groundCheckDistance = 0.7f;
     [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _speed = 5f;
+    [SerializeField] private int _health = 3;
 
     private Animator _animator;
     private bool _canAttack = true;
     private bool _canMove = true;
     private bool _isGrounded = false;
     private bool _resetJump = true;
+    private CapsuleCollider2D _collider2D;
+    private int _deathHash;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private SpriteRenderer _swordArcSprite;
@@ -29,10 +33,16 @@ public class Player : MonoBehaviour, IDamageable
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
+        _collider2D = GetComponent<CapsuleCollider2D>();
+        _deathHash = Animator.StringToHash("Death");
         _playerSprite = GetComponentInChildren<SpriteRenderer>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
         _localArcPos = _swordArcSprite.transform.localPosition;
+        Health = _health;
+        
+        _collider2D.enabled = true;
+        IsAlive = true;
     }
 
     private void Update()
@@ -47,13 +57,13 @@ public class Player : MonoBehaviour, IDamageable
         // Make sure Attack Animation isn't running in order to move player
         _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
         
-        if (_canMove)
+        if (_canMove && IsAlive)
         {
             float move = Input.GetAxisRaw("Horizontal");
             Jump();
             
-            _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
             
+            _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
             FlipSprite(move);
             
             OnPlayerMoved?.Invoke(move);
@@ -146,6 +156,16 @@ public class Player : MonoBehaviour, IDamageable
     public void Damage()
     {
         Debug.Log("Player was damaged");
+        Health -= 1;
+        Debug.Log($"CurrentHealth: {Health}");
+
+        if (Health <= 0 && IsAlive)
+        {
+            _animator.SetTrigger(_deathHash);
+            IsAlive = false;
+            // _rigidbody2D.isKinematic = true;
+            // _collider2D.enabled = false;
+        }
     }
 
     IEnumerator JumpDelayRoutine()

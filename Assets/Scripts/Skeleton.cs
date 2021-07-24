@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Skeleton : Enemy, IDamageable
 {
+    public bool IsAlive { get; set; }
     public int Health { get; set; }
 
     public override void Init()
     {
         base.Init();
         Health = base.health;
+        IsAlive = true;
     }
 
     public override void Update()
@@ -35,6 +37,8 @@ public class Skeleton : Enemy, IDamageable
         {
             animator.SetBool(combatHash, false);
             animator.SetTrigger("Dead");
+            IsAlive = false;
+            base.isAlive = IsAlive;
         }
     }
     

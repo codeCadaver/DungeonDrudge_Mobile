@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class MossGiant : Enemy, IDamageable
 {
+    public bool IsAlive { get; set; }
     public int Health { get; set; }
 
     public override void Init()
@@ -17,6 +18,7 @@ public class MossGiant : Enemy, IDamageable
     protected override void Start()
     {
         base.Start();
+        IsAlive = true;
     } 
 
     public override void Update()
@@ -40,6 +42,8 @@ public class MossGiant : Enemy, IDamageable
         {
             animator.SetBool(combatHash, false);
             animator.SetTrigger("Dead");
+            IsAlive = false;
+            base.isAlive = IsAlive;
         }
     }
 }
