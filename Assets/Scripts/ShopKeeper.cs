@@ -6,6 +6,7 @@ using UnityEngine;
 public class ShopKeeper : MonoBehaviour
 {
     [SerializeField] private GameObject _shopkeeperPanel;
+    [SerializeField] private int[] _selectionOffsets = {69, 37, -146};
     private int _diamonds;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -39,8 +40,30 @@ public class ShopKeeper : MonoBehaviour
         Player.OnDiamondsCollected -= GetDiamondCount;
     }
 
-    public void SelectItem()
+    public void SelectItem(int item)
     {
-        Debug.Log("Button Pressed");
+        // 0 = Top Button
+        // 1 = Middle Button
+        // 2 = Bottom Button
+        
+        switch (item)
+        {
+            case 0:
+                // top button
+                UIManager.Instance.UpdateShopSelection(_selectionOffsets[0]);
+                break;
+            case 1:
+                // middle button
+                UIManager.Instance.UpdateShopSelection(_selectionOffsets[1]);
+                break;
+            case 2:
+                // bottom button
+                UIManager.Instance.UpdateShopSelection(_selectionOffsets[2]);
+                break;
+            default:
+                // top button
+                UIManager.Instance.UpdateShopSelection(_selectionOffsets[0]);
+                break;
+        }
     }
 }

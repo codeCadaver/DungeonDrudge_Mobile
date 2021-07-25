@@ -29,4 +29,11 @@ public class UIManager : MonoBehaviour
     {
         _gemCountText.text = diamonds.ToString() + " G";
     }
+
+    public void UpdateShopSelection(int yPosition)
+    {
+        Vector2 newPosition = _selectionImage.rectTransform.anchoredPosition;
+        newPosition.y = yPosition;
+        _selectionImage.rectTransform.anchoredPosition = newPosition;
+    }
 }
