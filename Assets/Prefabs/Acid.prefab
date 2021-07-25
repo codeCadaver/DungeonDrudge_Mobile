@@ -151,10 +151,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3409223763305464148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d8c5ca0069ec014d8f65d03adffd7c3, type: 3}
+  m_Script: {fileID: 11500000, guid: ba4e0712ed4361441bc29b520ff36166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 1
-  _destructionDelay: 3
+  _destructionDelay: 5
   _speed: 5
-  _offset: {fileID: 0}
+  _offset: {fileID: 3409223763305464151}

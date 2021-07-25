@@ -7,7 +7,9 @@ public class Player : MonoBehaviour, IDamageable
 {
     public static Action OnPlayerAttacked;
     public static Action<float> OnPlayerMoved;
+    public static Action<int> OnDiamondsCollected;
     public static Action<bool> OnPlayerJumping;
+
 
     public bool IsAlive { get; set; }
     public int Health { get; set; }
@@ -190,6 +192,7 @@ public class Player : MonoBehaviour, IDamageable
     private void CollectDiamonds(int value)
     {
         _diamonds += value;
+        OnDiamondsCollected?.Invoke(_diamonds);
         Debug.Log($"Diamonds: {_diamonds}");
     }
 }
