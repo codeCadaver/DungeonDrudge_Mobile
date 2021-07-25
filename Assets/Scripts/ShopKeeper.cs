@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ShopKeeper : MonoBehaviour
@@ -91,6 +92,22 @@ public class ShopKeeper : MonoBehaviour
     {
         if (_currentDiamonds >= _selectedItemValue)
         {
+            switch (_selectedItem)
+            {
+                case 0:
+                    // TODO: add flame sword
+                    break;
+                case 1:
+                    // TODO: add boots of flight
+                    break;
+                case 2:
+                    GameManager.Instance.HasKey = true;
+                    break;
+                default:
+                    Debug.Log($"ShopKeeper::BuyItem()::Selected Item NOT FOUND: {_selectedItem}");
+                    break;
+                
+            }
             Debug.Log("You can purchase this");
             Debug.Log($"You have: {_currentDiamonds}, You need: {_selectedItemValue}");
             OnDiamondsRemoved?.Invoke(_selectedItemValue);
