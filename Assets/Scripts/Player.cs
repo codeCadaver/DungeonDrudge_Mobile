@@ -180,12 +180,14 @@ public class Player : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         Diamond.OnDiamondCollected += CollectDiamonds;
+        ShopKeeper.OnDiamondsRemoved += RemoveDiamonds;
         SpriteHelper.OnAttackEnded += CanMove;
     }
 
     private void OnDisable()
     {
         Diamond.OnDiamondCollected -= CollectDiamonds;
+        ShopKeeper.OnDiamondsRemoved -= RemoveDiamonds;
         SpriteHelper.OnAttackEnded -= CanMove;
     }
 
@@ -193,6 +195,11 @@ public class Player : MonoBehaviour, IDamageable
     {
         _diamonds += value;
         OnDiamondsCollected?.Invoke(_diamonds);
-        Debug.Log($"Diamonds: {_diamonds}");
+    }
+
+    private void RemoveDiamonds(int value)
+    {
+        _diamonds -= value;
+        OnDiamondsCollected?.Invoke(_diamonds);
     }
 }

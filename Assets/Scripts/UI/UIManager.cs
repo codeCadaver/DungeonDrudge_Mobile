@@ -30,10 +30,18 @@ public class UIManager : MonoBehaviour
         _gemCountText.text = diamonds.ToString() + " G";
     }
 
-    public void UpdateShopSelection(int yPosition)
+    public void UpdateShopSelection(int yPosition, bool visible)
     {
-        Vector2 newPosition = _selectionImage.rectTransform.anchoredPosition;
-        newPosition.y = yPosition;
-        _selectionImage.rectTransform.anchoredPosition = newPosition;
+        if (visible)
+        {
+            _selectionImage.enabled = true;
+            Vector2 newPosition = _selectionImage.rectTransform.anchoredPosition;
+            newPosition.y = yPosition;
+            _selectionImage.rectTransform.anchoredPosition = newPosition;
+        }
+        else
+        {
+            _selectionImage.enabled = false;
+        }
     }
 }
