@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     private static UIManager _instance;
     public static UIManager Instance => _instance;
 
-    [SerializeField] private TMP_Text _gemCountText;
+    [SerializeField] private TMP_Text _gemCount_Shop_Text, _gemCount_HUD_Text;
     [SerializeField] private Image _selectionImage;
 
     private void Awake()
@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenShop(int diamonds)
     {
-        _gemCountText.text = diamonds.ToString() + " G";
+        _gemCount_Shop_Text.text = diamonds.ToString() + " G";
     }
 
     public void UpdateShopSelection(int yPosition, bool visible)
@@ -43,5 +43,20 @@ public class UIManager : MonoBehaviour
         {
             _selectionImage.enabled = false;
         }
+    }
+
+    void UpdateGemCountHUD(int diamonds)
+    {
+        _gemCount_HUD_Text.text = diamonds.ToString();
+    }
+
+    private void OnEnable()
+    {
+        Player.OnDiamondsCollected += UpdateGemCountHUD;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnDiamondsCollected -= UpdateGemCountHUD;
     }
 }
