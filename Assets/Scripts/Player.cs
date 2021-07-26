@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour, IDamageable
 {
     public static Action OnPlayerAttacked;
+    public static Action OnPlayerHit;
     public static Action<float> OnPlayerMoved;
     public static Action<int> OnDiamondsCollected;
     public static Action<bool> OnPlayerJumping;
@@ -158,9 +159,8 @@ public class Player : MonoBehaviour, IDamageable
 
     public void Damage()
     {
-        Debug.Log("Player was damaged");
         Health -= 1;
-        Debug.Log($"CurrentHealth: {Health}");
+        OnPlayerHit?.Invoke();
 
         if (Health <= 0 && IsAlive)
         {

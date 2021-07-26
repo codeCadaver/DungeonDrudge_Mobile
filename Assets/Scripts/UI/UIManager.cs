@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text _gemCount_Shop_Text, _gemCount_HUD_Text;
     [SerializeField] private Image _selectionImage;
+    [SerializeField] private Image[] _healthBars;
 
     private void Awake()
     {
@@ -22,6 +23,14 @@ public class UIManager : MonoBehaviour
         else
         {
             _instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        foreach (var bar in _healthBars)
+        {
+            bar.enabled = true;
         }
     }
 
@@ -53,10 +62,24 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         Player.OnDiamondsCollected += UpdateGemCountHUD;
+        Player.OnPlayerHit += RemoveHealthBar;
     }
 
     private void OnDisable()
     {
         Player.OnDiamondsCollected -= UpdateGemCountHUD;
+        Player.OnPlayerHit -= RemoveHealthBar;
+    }
+
+    private void RemoveHealthBar()
+    {
+        for (int i = _healthBars.Length - 1; i >= 0; i--)
+        {
+            if (_healthBars[i].isActiveAndEnabled)
+            {
+                _healthBars[i].enabled = false;
+                break;
+            }
+        }
     }
 }
