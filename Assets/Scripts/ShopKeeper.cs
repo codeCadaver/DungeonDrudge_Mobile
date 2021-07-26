@@ -114,8 +114,14 @@ public class ShopKeeper : MonoBehaviour
         }
         else
         {
+            //TODO: Animate current amount of diamonds to show player doesn't have enough
             Debug.Log("You broke, mother-father!");
             Debug.Log($"You have: {_currentDiamonds}, You need: {_selectedItemValue}");
         }
+    }
+
+    public void Cancel()
+    {
+        _shopkeeperPanel.SetActive(false);
     }
 }
