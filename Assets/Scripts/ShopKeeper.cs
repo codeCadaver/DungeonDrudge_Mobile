@@ -79,12 +79,12 @@ public class ShopKeeper : MonoBehaviour
                 _selectedItem = 2;
                 _selectedItemValue = _selectedValues[2];
                 break;
-            default:
-                // top button
-                UIManager.Instance.UpdateShopSelection(_selectionOffsets[0], false);
-                _selectedItem = 0;
-                _selectedItemValue = _selectedValues[0];
-                break;
+            // default:
+            //     // top button
+            //     UIManager.Instance.UpdateShopSelection(_selectionOffsets[0], false);
+            //     _selectedItem = 0;
+            //     _selectedItemValue = _selectedValues[0];
+            //     break;
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -11,7 +12,6 @@ public class Player : MonoBehaviour, IDamageable
     public static Action<float> OnPlayerMoved;
     public static Action<int> OnDiamondsCollected;
     public static Action<bool> OnPlayerJumping;
-
 
     public bool IsAlive { get; set; }
     public int Health { get; set; }
@@ -28,6 +28,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool _isGrounded = false;
     private bool _resetJump = true;
     private CapsuleCollider2D _collider2D;
+    private float move;
     private int _deathHash;
     private int _diamonds;
     private Rigidbody2D _rigidbody2D;
@@ -45,27 +46,31 @@ public class Player : MonoBehaviour, IDamageable
         _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
         _localArcPos = _swordArcSprite.transform.localPosition;
         Health = _health;
-        
+
+        _canMove = true;
         _collider2D.enabled = true;
         IsAlive = true;
     }
 
     private void Update()
     {
-        Movement();
-        Attack();
+        // Movement();
+        // Attack();
+        IsGrounded();
         Debug.DrawRay(transform.position, Vector3.down * _groundCheckDistance, Color.green);
     }
 
-    private void Movement()
+    public void OnMovement(InputAction.CallbackContext ctx)
     {
+        Vector2 inputMovement = ctx.ReadValue<Vector2>().normalized;
+        // rawInputMovement = new Vector3(inputMovement.x, inputMovement.y, 0);
         // Make sure Attack Animation isn't running in order to move player
         _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
         
         if (_canMove && IsAlive)
         {
-            float move = Input.GetAxisRaw("Horizontal");
-            Jump();
+            move = inputMovement.x;
+            // Jump();
             
             
             _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
@@ -76,23 +81,53 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void Attack()
+    // private void Movement()
+    // {
+    //     // Make sure Attack Animation isn't running in order to move player
+    //     _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
+    //     
+    //     if (_canMove && IsAlive)
+    //     {
+    //         float move = Input.GetAxisRaw("Horizontal");
+    //         Jump();
+    //         
+    //         
+    //         _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
+    //         FlipSprite(move);
+    //         
+    //         OnPlayerMoved?.Invoke(move);
+    //         
+    //     }
+    // }
+
+    public void OnAttack(InputAction.CallbackContext ctx)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (IsGrounded())
         {
-            if (IsGrounded())
+            if (_canAttack)
             {
-                if (_canAttack)
-                {
-                    StartCoroutine(AttackRoutine());
-                }
-                // _canMove = false;
-                // _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
-                // OnPlayerAttacked?.Invoke();
-                // _playerAnimation.Attack();
+                StartCoroutine(AttackRoutine());
             }
         }
     }
+
+    // private void Attack()
+    // {
+    //     // if (Input.GetMouseButtonDown(0))
+    //     {
+    //         if (IsGrounded())
+    //         {
+    //             if (_canAttack)
+    //             {
+    //                 StartCoroutine(AttackRoutine());
+    //             }
+    //             // _canMove = false;
+    //             // _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
+    //             // OnPlayerAttacked?.Invoke();
+    //             // _playerAnimation.Attack();
+    //         }
+    //     }
+    // }
 
     IEnumerator AttackRoutine()
     {
@@ -108,23 +143,41 @@ public class Player : MonoBehaviour, IDamageable
         _canMove = true;
     }
 
-    private void Jump()
+    public void OnJump(InputAction.CallbackContext ctx)
     {
-        IsGrounded();
-        if (Input.GetKeyDown(KeyCode.Space))
+        Debug.Log("Player::OnJump() was called");
+        // IsGrounded();
+        if (!IsGrounded())
         {
-            if (!IsGrounded())
-            {
-                return;
-            }
-            _resetJump = false;
-            // _playerAnimation.IsJumping(true);
-            OnPlayerJumping?.Invoke(true);
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
-            // delay routine
-            StartCoroutine(JumpDelayRoutine());
+            return;
         }
+        
+        _resetJump = false;
+        // _playerAnimation.IsJumping(true);
+        OnPlayerJumping?.Invoke(true);
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+        // delay routine
+        StartCoroutine(JumpDelayRoutine());
+        _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
     }
+
+    // private void Jump()
+    // {
+    //     IsGrounded();
+    //     if (Input.GetKeyDown(KeyCode.Space))
+    //     {
+    //         if (!IsGrounded())
+    //         {
+    //             return;
+    //         }
+    //         _resetJump = false;
+    //         // _playerAnimation.IsJumping(true);
+    //         OnPlayerJumping?.Invoke(true);
+    //         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+    //         // delay routine
+    //         StartCoroutine(JumpDelayRoutine());
+    //     }
+    // }
 
     private bool IsGrounded()
     {
