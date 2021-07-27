@@ -18,12 +18,14 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected string idleName, hitName = "Hit";
 
     protected Animator animator;
+    protected bool canAttack = true;
     protected bool canMove = true;
     protected bool movingRight = true;
     protected bool isAlive = true;
     protected int combatHash = Animator.StringToHash("inCombat");
     protected int hitHash = Animator.StringToHash("Hit");
     protected int idleHash = Animator.StringToHash("Idle");
+    protected int playerAliveHash = Animator.StringToHash("playerAlive");
     protected int gems;
     protected Player player;
     protected SpriteRenderer sprite;
@@ -33,7 +35,8 @@ public abstract class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        
+        canAttack = true;
+
     }
 
     protected virtual void Start()
@@ -100,11 +103,41 @@ public abstract class Enemy : MonoBehaviour
 
     public void CheckPlayerDistance()
     {
+        if (!canAttack)
+        {
+            return;
+        }
+        
         float distance = Vector3.Distance(transform.localPosition, player.transform.localPosition);
         if (distance > playerDetectionDistance)
         {
             canMove = true;
             animator.SetBool(combatHash, false);
         }
+    }
+
+    private void StopAttacking()
+    {
+        // Debug.Log("Player Died");
+        canAttack = false;
+        animator.SetBool(combatHash, false);
+        animator.SetTrigger(idleHash);
+        StartCoroutine(ResumePatrolRoutine());
+    }
+    
+    private void OnEnable()
+    {
+        Player.OnPlayerDied += StopAttacking;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnPlayerDied -= StopAttacking;
+    }
+
+    IEnumerator ResumePatrolRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        canMove = true;
     }
 }

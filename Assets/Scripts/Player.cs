@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    public static Action OnPlayerAttacked;
-    public static Action OnPlayerHit;
+    public static Action OnPlayerAttacked;  // Player attacked something
+    public static Action OnPlayerDied;
+    public static Action OnPlayerHit;       // Player was hit
     public static Action<float> OnPlayerMoved;
     public static Action<int> OnDiamondsCollected;
     public static Action<bool> OnPlayerJumping;
@@ -19,7 +20,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _groundCheckDistance = 0.7f;
     [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _speed = 5f;
-    [SerializeField] private int _health = 3;
+    [SerializeField] private int _health = 4;
 
     private Animator _animator;
     private bool _canAttack = true;
@@ -166,6 +167,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             _animator.SetTrigger(_deathHash);
             IsAlive = false;
+            OnPlayerDied?.Invoke();
             // _rigidbody2D.isKinematic = true;
             // _collider2D.enabled = false;
         }
