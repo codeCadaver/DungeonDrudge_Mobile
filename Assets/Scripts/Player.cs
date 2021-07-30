@@ -28,13 +28,25 @@ public class Player : MonoBehaviour, IDamageable
     private bool _isGrounded = false;
     private bool _resetJump = true;
     private CapsuleCollider2D _collider2D;
-    private float move;
+    // private float move;
     private int _deathHash;
     private int _diamonds;
+    private PlayerControls _controls;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private SpriteRenderer _swordArcSprite;
+    private Vector2 _inputMovement;
     private Vector3 _localArcPos;
+
+    private void Awake()
+    {
+        // _controls = new PlayerControls();
+
+        // _controls.Player.Move.performed += OnMovement;
+        // _controls.Player.Move.canceled += OnStoppedMoving;
+        // _controls.Player.Attack.performed += OnAttack;
+        // _controls.Player.Jump.performed += OnJump;
+    }
 
     private void Start()
     {
@@ -54,51 +66,62 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        // Movement();
-        // Attack();
+        Movement();
+        Attack();
         IsGrounded();
+
         Debug.DrawRay(transform.position, Vector3.down * _groundCheckDistance, Color.green);
     }
 
-    public void OnMovement(InputAction.CallbackContext ctx)
-    {
-        Vector2 inputMovement = ctx.ReadValue<Vector2>().normalized;
-        // rawInputMovement = new Vector3(inputMovement.x, inputMovement.y, 0);
-        // Make sure Attack Animation isn't running in order to move player
-        _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
-        
-        if (_canMove && IsAlive)
-        {
-            move = inputMovement.x;
-            // Jump();
-            
-            
-            _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
-            FlipSprite(move);
-            
-            OnPlayerMoved?.Invoke(move);
-            
-        }
-    }
-
-    // private void Movement()
+    // public void OnStoppedMoving(InputAction.CallbackContext ctx)
     // {
-    //     // Make sure Attack Animation isn't running in order to move player
+    //     _rigidbody2D.velocity = Vector2.zero;
+    //     OnPlayerMoved?.Invoke(_rigidbody2D.velocity.x);
+    // }
+
+    // public void OnMovement(InputAction.CallbackContext ctx)
+    // {
     //     _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
-    //     
+    //
+    //     _inputMovement = ctx.ReadValue<Vector2>();
+    //     var move = _inputMovement.x;
+    //     if (move != 0)
+    //     {
+    //         move = move > 0 ? 1 : -1;
+    //     }
     //     if (_canMove && IsAlive)
     //     {
-    //         float move = Input.GetAxisRaw("Horizontal");
-    //         Jump();
+    //         Debug.Log($"inputMovement X: {move}");
+    //         // Jump();
     //         
     //         
     //         _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
     //         FlipSprite(move);
     //         
     //         OnPlayerMoved?.Invoke(move);
-    //         
     //     }
     // }
+
+
+    private void Movement()
+    {
+        // Make sure Attack Animation isn't running in order to move player
+        _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
+        
+        if (_canMove && IsAlive)
+        {
+            var gamepad = Gamepad.current;
+            // float move = Input.GetAxisRaw("Horizontal");
+            float move = gamepad.leftStick.ReadValue().x;
+            Jump();
+            
+            
+            _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
+            FlipSprite(move);
+            
+            OnPlayerMoved?.Invoke(move);
+        }
+    }
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
@@ -111,23 +134,27 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    // private void Attack()
-    // {
-    //     // if (Input.GetMouseButtonDown(0))
-    //     {
-    //         if (IsGrounded())
-    //         {
-    //             if (_canAttack)
-    //             {
-    //                 StartCoroutine(AttackRoutine());
-    //             }
-    //             // _canMove = false;
-    //             // _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
-    //             // OnPlayerAttacked?.Invoke();
-    //             // _playerAnimation.Attack();
-    //         }
-    //     }
-    // }
+
+    private void Attack()
+    {
+        // if (Input.GetMouseButtonDown(0))
+        var gamepad = Gamepad.current;
+        if (gamepad.buttonWest.wasPressedThisFrame)
+            
+        {
+            if (IsGrounded())
+            {
+                if (_canAttack)
+                {
+                    StartCoroutine(AttackRoutine());
+                }
+                // _canMove = false;
+                // _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
+                // OnPlayerAttacked?.Invoke();
+                // _playerAnimation.Attack();
+            }
+        }
+    }
 
     IEnumerator AttackRoutine()
     {
@@ -138,46 +165,48 @@ public class Player : MonoBehaviour, IDamageable
         _canAttack = true;
     }
 
-    public void CanMove()
-    {
-        _canMove = true;
-    }
+    // public void CanMove()
+    // {
+    //     _canMove = true;
+    // }
 
-    public void OnJump(InputAction.CallbackContext ctx)
+    // public void OnJump(InputAction.CallbackContext ctx)
+    // {
+    //     // IsGrounded();
+    //     if (!IsGrounded())
+    //     {
+    //         return;
+    //     }
+    //     _resetJump = false;
+    //     OnPlayerJumping?.Invoke(true);
+    //     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+    //     // delay routine
+    //     StartCoroutine(JumpDelayRoutine());
+    // }
+
+    private void Jump()
     {
-        Debug.Log("Player::OnJump() was called");
-        // IsGrounded();
-        if (!IsGrounded())
+        IsGrounded();
+        var gamepad = Gamepad.current;
+        if (gamepad == null)
         {
             return;
         }
-        
-        _resetJump = false;
-        // _playerAnimation.IsJumping(true);
-        OnPlayerJumping?.Invoke(true);
-        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
-        // delay routine
-        StartCoroutine(JumpDelayRoutine());
-        _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
+        // if (Input.GetKeyDown(KeyCode.Space))
+        if (gamepad.buttonEast.wasPressedThisFrame)
+        {
+            if (!IsGrounded())
+            {
+                return;
+            }
+            _resetJump = false;
+            // _playerAnimation.IsJumping(true);
+            OnPlayerJumping?.Invoke(true);
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+            // delay routine
+            StartCoroutine(JumpDelayRoutine());
+        }
     }
-
-    // private void Jump()
-    // {
-    //     IsGrounded();
-    //     if (Input.GetKeyDown(KeyCode.Space))
-    //     {
-    //         if (!IsGrounded())
-    //         {
-    //             return;
-    //         }
-    //         _resetJump = false;
-    //         // _playerAnimation.IsJumping(true);
-    //         OnPlayerJumping?.Invoke(true);
-    //         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
-    //         // delay routine
-    //         StartCoroutine(JumpDelayRoutine());
-    //     }
-    // }
 
     private bool IsGrounded()
     {
@@ -234,16 +263,18 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
+        // _controls.Player.Enable();
         Diamond.OnDiamondCollected += CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved += RemoveDiamonds;
-        SpriteHelper.OnAttackEnded += CanMove;
+        // SpriteHelper.OnAttackEnded += CanMove;
     }
 
     private void OnDisable()
     {
+        // _controls.Player.Disable();
         Diamond.OnDiamondCollected -= CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved -= RemoveDiamonds;
-        SpriteHelper.OnAttackEnded -= CanMove;
+        // SpriteHelper.OnAttackEnded -= CanMove;
     }
 
     private void CollectDiamonds(int value)

@@ -56,6 +56,7 @@ public class Diamond : MonoBehaviour
     IEnumerator CollectRoutine()
     {
         yield return new WaitForSeconds(0.5f);
+        _rigidbody2D.gravityScale = 0;
         _canCollect = true;
     }
 
