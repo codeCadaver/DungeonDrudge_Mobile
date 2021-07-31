@@ -264,6 +264,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         // _controls.Player.Enable();
+        AdsManager.OnRewardAdWatched += CollectDiamonds;
         Diamond.OnDiamondCollected += CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved += RemoveDiamonds;
         // SpriteHelper.OnAttackEnded += CanMove;
@@ -272,6 +273,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnDisable()
     {
         // _controls.Player.Disable();
+        AdsManager.OnRewardAdWatched -= CollectDiamonds;
         Diamond.OnDiamondCollected -= CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved -= RemoveDiamonds;
         // SpriteHelper.OnAttackEnded -= CanMove;

@@ -6,11 +6,15 @@ using UnityEngine.Advertisements;
 
 public class AdsManager : MonoBehaviour, IUnityAdsListener
 {
+    public static Action<int> OnRewardAdWatched;
+    
     [SerializeField] private string _androidGameID;
     [SerializeField] private string _iOSGameID;
     [SerializeField] private string _rewardedVideoAndroid;
     [SerializeField] private string _rewardedVideoIOS;
     [SerializeField] private bool _testMode = true;
+
+    [SerializeField] private int _diamondsAwarded = 50;
 
     private string _adUnitId;
     private string _rewardAd;
@@ -41,7 +45,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
         }
         else
         {
-            Debug.Log("Rewarded Video is not ready, please try again later!");
+            Debug.Log("Rewarded Video is not ready");
         }
     }
  
@@ -65,23 +69,24 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
         switch (result)
         {
             case ShowResult.Finished:
+                OnRewardAdWatched?.Invoke(_diamondsAwarded);
                 // PlayerStats.Instance.AddDiamonds(100);
                 // SavingSystem.Instance.SaveCurrency();
                 Debug.Log("Watched ad");
                 break;
             case ShowResult.Failed:
-                Debug.LogWarning("The ad did not finish due to an error.");
+                Debug.LogWarning("The ad failed.");
                 break;
             case ShowResult.Skipped:
-                Debug.LogWarning("The ad was skipped, you will not be rewarded");
+                Debug.LogWarning("The ad was skipped");
                 break;
         }
     }
+
     
     private void OnEnable()
     {
         Advertisement.AddListener(this);
-        
     }
  
     private void OnDisable()
