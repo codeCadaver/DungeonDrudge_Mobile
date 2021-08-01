@@ -249,6 +249,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             _animator.SetTrigger(_deathHash);
             IsAlive = false;
+            _canMove = false;
+            _rigidbody2D.velocity = Vector2.zero;
             OnPlayerDied?.Invoke();
             // _rigidbody2D.isKinematic = true;
             // _collider2D.enabled = false;

@@ -7,6 +7,11 @@ using Random = UnityEngine.Random;
 
 public class Spider : Enemy, IDamageable
 {
+    public static Action OnPlayerDetected;
+    
+    private bool _canShoot = false;
+    [SerializeField] private float _detectionRadius = 3f;
+    
     public bool IsAlive { get; set; }
     public int Health { get; set; }
     
@@ -27,6 +32,21 @@ public class Spider : Enemy, IDamageable
     public override void Update()
     {
         base.Update();
+        DetectPlayer();
+    }
+
+    private void DetectPlayer()
+    {
+        if (player == null)
+        {
+            return;
+        }
+        var distance = Vector2.Distance(this.transform.position, player.transform.position);
+        if (distance < _detectionRadius)
+        {
+            Debug.Log("Player Detected");
+            animator.SetBool(combatHash, true);
+        }
     }
 
     public override void Movement(bool direction)
