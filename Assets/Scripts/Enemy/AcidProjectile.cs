@@ -7,6 +7,7 @@ public class AcidProjectile : MonoBehaviour, IProjectile
 {
     [SerializeField] private float _damage,_destructionDelay, _speed;
     [SerializeField] private Transform _offset;
+    [SerializeField] private int _attackStrength = 1;
     
     public float Damage { get; set; }
     public float Speed { get; set; }
@@ -34,7 +35,7 @@ public class AcidProjectile : MonoBehaviour, IProjectile
                 return;
             }
             
-            hit.Damage();
+            hit.Damage(_attackStrength);
             Destruction();
         }
 

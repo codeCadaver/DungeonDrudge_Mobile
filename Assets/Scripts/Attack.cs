@@ -6,6 +6,7 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     [SerializeField] private string _attackString = "Attack";
+    [SerializeField] private int _attackStrength = 1;
     private bool _canDamage = true;
     private BoxCollider2D _boxCollider2D;
 
@@ -31,7 +32,7 @@ public class Attack : MonoBehaviour
         
         if (_canDamage && hit.IsAlive)
         {
-            hit.Damage();
+            hit.Damage(_attackStrength);
             _canDamage = false;
         }
     }

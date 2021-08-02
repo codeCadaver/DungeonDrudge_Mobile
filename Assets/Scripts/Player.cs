@@ -8,7 +8,7 @@ public class Player : MonoBehaviour, IDamageable
 {
     public static Action OnPlayerAttacked;  // Player attacked something
     public static Action OnPlayerDied;
-    public static Action OnPlayerHit;       // Player was hit
+    public static Action<int> OnPlayerHit;       // Player was hit
     public static Action<float> OnPlayerMoved;
     public static Action<int> OnDiamondsCollected;
     public static Action<bool> OnPlayerJumping;
@@ -240,10 +240,10 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    public void Damage()
+    public void Damage(int damageAmount)
     {
-        Health -= 1;
-        OnPlayerHit?.Invoke();
+        Health -= damageAmount;
+        OnPlayerHit?.Invoke(damageAmount);
 
         if (Health <= 0 && IsAlive)
         {

@@ -29,10 +29,10 @@ public class Skeleton : Enemy, IDamageable
         base.Movement(direction);
     }
 
-    public void Damage()
+    public void Damage(int damageAmount)
     {
         canMove = false;
-        Health -= 1;
+        Health -= damageAmount;
         animator.SetTrigger(hitHash);
         animator.SetBool(combatHash, true);
         if (Health <= 0)

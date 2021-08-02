@@ -158,3 +158,4 @@ MonoBehaviour:
   _destructionDelay: 5
   _speed: 5
   _offset: {fileID: 3409223763305464151}
+  _attackStrength: 2

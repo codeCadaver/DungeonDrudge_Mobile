@@ -71,14 +71,21 @@ public class UIManager : MonoBehaviour
         Player.OnPlayerHit -= RemoveHealthBar;
     }
 
-    private void RemoveHealthBar()
+    private void RemoveHealthBar(int healthUnits)
     {
-        for (int i = _healthBars.Length - 1; i >= 0; i--)
+        int currentUnits = 0;
         {
-            if (_healthBars[i].isActiveAndEnabled)
+            for (int i = _healthBars.Length - 1; i >= 0; i--)
             {
-                _healthBars[i].enabled = false;
-                break;
+                if (_healthBars[i].isActiveAndEnabled)
+                {
+                    _healthBars[i].enabled = false;
+                    currentUnits += 1;
+                    if (currentUnits >= healthUnits)
+                    {
+                        break;
+                    }
+                }
             }
         }
     }
