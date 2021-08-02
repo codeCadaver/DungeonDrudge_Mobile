@@ -95,10 +95,10 @@ public class ShopKeeper : MonoBehaviour
             switch (_selectedItem)
             {
                 case 0:
-                    // TODO: add flame sword
+                    GameManager.Instance.HasSword = true;
                     break;
                 case 1:
-                    // TODO: add boots of flight
+                    GameManager.Instance.HasBoots = true;
                     break;
                 case 2:
                     GameManager.Instance.HasKey = true;

@@ -26,5 +26,8 @@ public class PlayerData
             player.transform.position.z
         };
 
+        hasKey = GameManager.Instance.HasKey;
+        hasBoots = GameManager.Instance.HasBoots;
+        hasSword = GameManager.Instance.HasSword;
     }
 }

@@ -22,6 +22,12 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(scene);
     }
 
+    public void LoadData()
+    {
+        Player player = new Player();
+        player.LoadPlayer();
+    }
+
     public void Quit()
     {
         Application.Quit();

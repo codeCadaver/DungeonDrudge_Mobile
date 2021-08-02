@@ -10,6 +10,13 @@ public class GameManager : MonoBehaviour
     
     [field: SerializeField]
     public bool HasKey { get; set; }
+    [field: SerializeField]
+    public bool HasBoots { get; set; }
+    [field: SerializeField]
+    public bool HasSword { get; set; }
+    
+    [SerializeField] private GameObject _pausePanel;
+
 
     private void Awake()
     {
@@ -21,5 +28,22 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
+    
+    public void OpenPausePanel()
+    {
+        Time.timeScale = 0;
+        _pausePanel.SetActive(true);
+    }
+
+    public void ClosePausePanel()
+    {
+        Time.timeScale = 1;
+        _pausePanel.SetActive(false);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
