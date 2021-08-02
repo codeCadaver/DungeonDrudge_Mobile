@@ -8,10 +8,12 @@ public class AcidProjectile : MonoBehaviour, IProjectile
     [SerializeField] private float _damage,_destructionDelay, _speed;
     [SerializeField] private Transform _offset;
     [SerializeField] private int _attackStrength = 1;
-    
+
     public float Damage { get; set; }
     public float Speed { get; set; }
     public Transform Offset { get; set; }
+
+    private bool _flipDirection = false;
 
     private void Start()
     {
@@ -22,6 +24,11 @@ public class AcidProjectile : MonoBehaviour, IProjectile
         Destroy(this.gameObject, _destructionDelay);
 
         StartCoroutine(MoveRoutine());
+    }
+
+    public bool FlipDirection(bool direction)
+    {
+        return _flipDirection = direction;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -47,9 +54,10 @@ public class AcidProjectile : MonoBehaviour, IProjectile
 
     IEnumerator MoveRoutine()
     {
+        Vector2 direction = _flipDirection ? Vector2.left : Vector2.right; 
         while (true)
         {
-            transform.Translate(Vector3.right * (Time.deltaTime * Speed));
+            transform.Translate(transform.InverseTransformDirection(direction * (Time.deltaTime * Speed)));
             yield return new WaitForEndOfFrame();
         }
     }

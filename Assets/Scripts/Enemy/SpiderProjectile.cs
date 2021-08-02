@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SpiderProjectile : MonoBehaviour
 {
+    [SerializeField] private bool _flipDirection;
     [SerializeField] private GameObject _projectile;
     [SerializeField] private Transform _offset;
 
@@ -20,6 +21,7 @@ public class SpiderProjectile : MonoBehaviour
     public void Fire()
     {
         GameObject projectile = Instantiate(_projectile, Offset.position, Quaternion.identity);
+        projectile.GetComponent<AcidProjectile>().FlipDirection(_flipDirection);
     }
 
     // private void OnEnable()

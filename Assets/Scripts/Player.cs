@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour, IDamageable
     public static Action<bool> OnPlayerJumping;
 
     public bool IsAlive { get; set; }
+    public int Diamonds { get; private set; }
     public int Health { get; set; }
 
     [SerializeField] private float _attackDelay = 0.2f;
@@ -30,7 +33,7 @@ public class Player : MonoBehaviour, IDamageable
     private CapsuleCollider2D _collider2D;
     // private float move;
     private int _deathHash;
-    private int _diamonds;
+    // private int _diamonds;
     private PlayerControls _controls;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
@@ -283,13 +286,44 @@ public class Player : MonoBehaviour, IDamageable
 
     private void CollectDiamonds(int value)
     {
-        _diamonds += value;
-        OnDiamondsCollected?.Invoke(_diamonds);
+        // _diamonds += value;
+        // Diamonds = _diamonds;
+        Diamonds += value;
+        // OnDiamondsCollected?.Invoke(_diamonds);
+        OnDiamondsCollected?.Invoke(Diamonds);
+        SavePlayer();
     }
 
     private void RemoveDiamonds(int value)
     {
-        _diamonds -= value;
-        OnDiamondsCollected?.Invoke(_diamonds);
+        // _diamonds -= value;
+        Diamonds -= value;
+        // Diamonds = _diamonds; 
+        // OnDiamondsCollected?.Invoke(_diamonds);
+        OnDiamondsCollected?.Invoke(Diamonds);
+        SavePlayer();
+    }
+    
+    public void SavePlayer()
+    {
+        SaveSystem.SavePlayer(this);
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayer();
+
+        Diamonds = data.diamonds;
+        Health = data.health;
+
+        Vector3 position = new Vector3();
+        position.x = data.position[0];
+        position.y = data.position[1];
+        position.z = data.position[2];
+        transform.position = position;
+        
+        //TODO: add bools for key, boots, sword
+
+        SceneManager.LoadScene(data.level);
     }
 }

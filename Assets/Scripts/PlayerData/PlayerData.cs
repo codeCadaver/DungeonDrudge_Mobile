@@ -1,0 +1,30 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable]
+public class PlayerData
+{
+    public bool hasKey;
+    public bool hasBoots;
+    public bool hasSword;
+    public int diamonds;
+    public int level;
+    public int health;
+    public float[] position;
+
+    public PlayerData(Player player)
+    {
+        diamonds = player.Diamonds;
+        level = 1;
+        health = player.Health;
+        position = new float[]
+        {
+            player.transform.position.x,
+            player.transform.position.y,
+            player.transform.position.z
+        };
+
+    }
+}
