@@ -16,13 +16,15 @@ public class Player : MonoBehaviour, IDamageable
     public static Action<bool> OnPlayerJumping;
 
     public bool IsAlive { get; set; }
-    public int Diamonds { get; private set; }
+    public int Diamonds { get; set; }
     public int Health { get; set; }
 
     [SerializeField] private float _attackDelay = 0.2f;
+    [SerializeField] private float _gameOverPanelDelay = 2f;
     [SerializeField] private float _groundCheckDistance = 0.7f;
     [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _speed = 5f;
+    [SerializeField] private GameObject _gameOverPanel;
     [SerializeField] private int _health = 4;
 
     private Animator _animator;
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Awake()
     {
+        // DontDestroyOnLoad(this);
         // _controls = new PlayerControls();
 
         // _controls.Player.Move.performed += OnMovement;
@@ -255,9 +258,16 @@ public class Player : MonoBehaviour, IDamageable
             _canMove = false;
             _rigidbody2D.velocity = Vector2.zero;
             OnPlayerDied?.Invoke();
+            StartCoroutine(GameOverPanelRoutine());
             // _rigidbody2D.isKinematic = true;
             // _collider2D.enabled = false;
         }
+    }
+
+    IEnumerator GameOverPanelRoutine()
+    {
+        yield return new WaitForSeconds(_gameOverPanelDelay);
+        _gameOverPanel.SetActive(true);
     }
 
     IEnumerator JumpDelayRoutine()
@@ -273,6 +283,8 @@ public class Player : MonoBehaviour, IDamageable
         Diamond.OnDiamondCollected += CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved += RemoveDiamonds;
         // SpriteHelper.OnAttackEnded += CanMove;
+
+        // GameManager.OnPlayerSaved += SavePlayer;
     }
 
     private void OnDisable()
@@ -282,6 +294,8 @@ public class Player : MonoBehaviour, IDamageable
         Diamond.OnDiamondCollected -= CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved -= RemoveDiamonds;
         // SpriteHelper.OnAttackEnded -= CanMove;
+
+        // GameManager.OnPlayerSaved -= SavePlayer;
     }
 
     private void CollectDiamonds(int value)
@@ -291,7 +305,8 @@ public class Player : MonoBehaviour, IDamageable
         Diamonds += value;
         // OnDiamondsCollected?.Invoke(_diamonds);
         OnDiamondsCollected?.Invoke(Diamonds);
-        SavePlayer();
+        // SavePlayer();
+        GameManager.Instance.SavePlayer();
     }
 
     private void RemoveDiamonds(int value)
@@ -301,29 +316,30 @@ public class Player : MonoBehaviour, IDamageable
         // Diamonds = _diamonds; 
         // OnDiamondsCollected?.Invoke(_diamonds);
         OnDiamondsCollected?.Invoke(Diamonds);
-        SavePlayer();
+        // SavePlayer();
+        GameManager.Instance.SavePlayer();
     }
     
-    public void SavePlayer()
-    {
-        SaveSystem.SavePlayer(this);
-    }
-
-    public void LoadPlayer()
-    {
-        PlayerData data = SaveSystem.LoadPlayer();
-
-        Diamonds = data.diamonds;
-        Health = data.health;
-
-        Vector3 position = new Vector3();
-        position.x = data.position[0];
-        position.y = data.position[1];
-        position.z = data.position[2];
-        // transform.position = position;
-        
-        //TODO: add bools for key, boots, sword
-
-        SceneManager.LoadScene(data.level);
-    }
+    // public void SavePlayer()
+    // {
+    //     SaveSystem.SavePlayer(this);
+    // }
+    //
+    // public void LoadPlayer()
+    // {
+    //     PlayerData data = SaveSystem.LoadPlayer();
+    //
+    //     Diamonds = data.diamonds;
+    //     Health = data.health;
+    //
+    //     Vector3 position = new Vector3();
+    //     position.x = data.position[0];
+    //     position.y = data.position[1];
+    //     position.z = data.position[2];
+    //     transform.position = position;
+    //     
+    //     //TODO: add bools for key, boots, sword
+    //
+    //     SceneManager.LoadScene(data.level);
+    // }
 }

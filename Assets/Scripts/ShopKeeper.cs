@@ -111,6 +111,8 @@ public class ShopKeeper : MonoBehaviour
             Debug.Log("You can purchase this");
             Debug.Log($"You have: {_currentDiamonds}, You need: {_selectedItemValue}");
             OnDiamondsRemoved?.Invoke(_selectedItemValue);
+            // Player player = new Player();
+            GameManager.Instance.SavePlayer();
         }
         else
         {

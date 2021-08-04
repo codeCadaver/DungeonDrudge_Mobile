@@ -24,8 +24,7 @@ public class MainMenu : MonoBehaviour
 
     public void LoadData()
     {
-        Player player = new Player();
-        player.LoadPlayer();
+        GameManager.Instance.LoadPlayer();
     }
 
     public void Quit()
