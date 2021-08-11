@@ -30,4 +30,21 @@ public class PlayerData
         hasBoots = GameManager.Instance.HasBoots;
         hasSword = GameManager.Instance.HasSword;
     }
+    
+    public PlayerData()
+    {
+        diamonds = GameManager.Instance.Diamonds;
+        level = 1;
+        health = GameManager.Instance.Health;
+        // position = new float[]
+        // {
+        //     player.transform.position.x,
+        //     player.transform.position.y,
+        //     player.transform.position.z
+        // };
+
+        hasKey = GameManager.Instance.HasKey;
+        hasBoots = GameManager.Instance.HasBoots;
+        hasSword = GameManager.Instance.HasSword;
+    }
 }

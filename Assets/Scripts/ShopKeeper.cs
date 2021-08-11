@@ -7,6 +7,8 @@ using UnityEngine;
 public class ShopKeeper : MonoBehaviour
 {
     public static Action<int> OnDiamondsRemoved;
+    public static Action OnHasFlameSword;
+    public static Action OnHasKey;
     
     [SerializeField] private GameObject _shopkeeperPanel;
     [SerializeField] private int[] _selectionOffsets = {69, 37, -146};
@@ -15,6 +17,11 @@ public class ShopKeeper : MonoBehaviour
     private int _currentDiamonds;
     private int _selectedItem;
     private int _selectedItemValue;
+
+    private void Start()
+    {
+        _currentDiamonds = GameManager.Instance.Diamonds;
+    }
 
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -96,12 +103,17 @@ public class ShopKeeper : MonoBehaviour
             {
                 case 0:
                     GameManager.Instance.HasSword = true;
+                    // TODO: Send Has FlameEvent
+                    OnHasFlameSword?.Invoke();
                     break;
                 case 1:
                     GameManager.Instance.HasBoots = true;
+                    //TODO: Send Double Jump Event
+                    
                     break;
                 case 2:
                     GameManager.Instance.HasKey = true;
+                    OnHasKey?.Invoke();
                     break;
                 default:
                     Debug.Log($"ShopKeeper::BuyItem()::Selected Item NOT FOUND: {_selectedItem}");

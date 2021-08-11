@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
+    
     [SerializeField] private string _attackString = "Attack";
     [SerializeField] private int _attackStrength = 1;
     private bool _canDamage = true;
@@ -40,6 +41,11 @@ public class Attack : MonoBehaviour
     private void CanAttack()
     {
         _canDamage = true;
+    }
+
+    public void UpdateAttackStrength(int increasedAmount)
+    {
+        _attackStrength += increasedAmount;
     }
 
     private void OnEnable()

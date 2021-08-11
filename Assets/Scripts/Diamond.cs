@@ -41,7 +41,7 @@ public class Diamond : MonoBehaviour
             {
                 _target = other.gameObject;
                 _rigidbody2D.velocity = Vector2.up * (_height * Time.deltaTime);
-                _rigidbody2D.gravityScale = 1f;
+                // _rigidbody2D.gravityScale = 1f;
             }
             else
             {
@@ -56,7 +56,7 @@ public class Diamond : MonoBehaviour
     IEnumerator CollectRoutine()
     {
         yield return new WaitForSeconds(0.5f);
-        _rigidbody2D.gravityScale = 0;
+        _rigidbody2D.gravityScale = 1;
         _canCollect = true;
     }
 

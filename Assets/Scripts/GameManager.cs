@@ -17,11 +17,17 @@ public class GameManager : MonoBehaviour
     public bool HasBoots { get; set; }
     [field: SerializeField]
     public bool HasSword { get; set; }
+    [field: SerializeField]
+    public int Diamonds { get; set; }
+    [field: SerializeField]
+    public int Health { get; set; }
 
     [SerializeField] private float _newGameDelay = 2f;
     [SerializeField] private GameObject _pausePanel;
 
-    private Player _player;
+    // private Player _player;
+
+    public Vector3 position;
 
 
     private void Awake()
@@ -46,11 +52,11 @@ public class GameManager : MonoBehaviour
         // OnPlayerSaved?.Invoke();
         Time.timeScale = 0;
         _pausePanel.SetActive(true);
-        _player = GameObject.FindObjectOfType<Player>();
-        if (_player == null)
-        {
-            _player = new Player();
-        }
+        // _player = GameObject.FindObjectOfType<Player>();
+        // if (_player == null)
+        // {
+        //     _player = new Player();
+        // }
         SavePlayer();
     }
 
@@ -73,34 +79,61 @@ public class GameManager : MonoBehaviour
     public void SavePlayer()
     {
         Debug.Log("System saved");
-        if (_player == null)
-        {
-            return;
-        }
-        SaveSystem.SavePlayer(_player);
+        // if (_player == null)
+        // {
+        //     return;
+        // }
+        // SaveSystem.SavePlayer(_player);
+        SaveSystem.SavePlayer();
     }
 
     public void LoadPlayer()
     {
         PlayerData data = SaveSystem.LoadPlayer();
 
-        if (_player == null)
-        {
-            return;
-        }
-        _player.Diamonds = data.diamonds;
-        _player.Health = data.health;
+        // if (_player == null)
+        // {
+        //     return;
+        // }
+        // _player.Diamonds = data.diamonds;
+        // _player.Health = data.health;
+        Diamonds = data.diamonds;
+        Health = data.health;
 
-        Vector3 position = new Vector3();
-        position.x = data.position[0];
-        position.y = data.position[1];
-        position.z = data.position[2];
-        transform.position = position;
+        // Vector3 position = new Vector3();
+        // position.x = data.position[0];
+        // position.y = data.position[1];
+        // position.z = data.position[2];
+        // transform.position = position;
 
         HasBoots = data.hasBoots;
         HasKey = data.hasKey;
         HasSword = data.hasSword;
         
         SceneManager.LoadScene(data.level);
+    }
+
+    private void DiamondCount(int diamonds)
+    {
+        Diamonds += diamonds;
+    }
+
+    private void HealthCount(int damageAmount)
+    {
+        Health -= damageAmount;
+    }
+
+    private void OnEnable()
+    {
+        Diamond.OnDiamondCollected += DiamondCount;
+        // Player.OnDiamondsCollected += DiamondCount;
+        Player.OnPlayerHit += HealthCount;
+    }
+
+    private void OnDisable()
+    {
+        // Player.OnDiamondsCollected -= DiamondCount;
+        Diamond.OnDiamondCollected -= DiamondCount;
+        Player.OnPlayerHit -= HealthCount;
     }
 }

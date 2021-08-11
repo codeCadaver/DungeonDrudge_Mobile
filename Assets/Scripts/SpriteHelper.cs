@@ -17,14 +17,18 @@ public class SpriteHelper : MonoBehaviour
     public static Action OnAttackEnded;
     public static Action OnAttackBegan;
 
-    
+    [SerializeField] private GameObject _flameSword;
     [SerializeField] private GameObject[] _swordFX;
+    [field: SerializeField] private int _flameSwordStrengthIncrease = 1;
+        
     private GameObject _currentSpriteFX;
+    private Attack _attack;
 
     public SwordFX _currentFX;
 
     private void Start()
     {
+        _attack = GetComponentInChildren<Attack>();
         _currentFX = SwordFX.ORANGE;
         _currentSpriteFX = _swordFX[0];
     }
@@ -51,6 +55,13 @@ public class SpriteHelper : MonoBehaviour
         }
     }
 
+    private void EnableFlameSword()
+    {
+        _flameSword.SetActive(true);
+        // _attack strength += 1;
+        _attack.UpdateAttackStrength(_flameSwordStrengthIncrease);
+    }
+
 
     public void AttackEnded()
     {
@@ -67,5 +78,14 @@ public class SpriteHelper : MonoBehaviour
         // _currentSpriteFX.SetActive(true);
         // _currentSpriteFX.GetComponent<Animator>().SetTrigger("Attack");
     }
-    
+
+    private void OnEnable()
+    {
+        ShopKeeper.OnHasFlameSword += EnableFlameSword;
+    }
+
+    private void OnDisable()
+    {
+        ShopKeeper.OnHasFlameSword -= EnableFlameSword;
+    }
 }

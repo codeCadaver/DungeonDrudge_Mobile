@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance => _instance;
 
     [SerializeField] private TMP_Text _gemCount_Shop_Text, _gemCount_HUD_Text;
-    [SerializeField] private Image _selectionImage;
+    [SerializeField] private Image _selectionImage, _keyImage;
     [SerializeField] private Image[] _healthBars;
 
     private void Awake()
@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
         {
             bar.enabled = true;
         }
+
+        
+        _gemCount_HUD_Text.text = GameManager.Instance.Diamonds.ToString();
     }
 
     public void OpenShop(int diamonds)
@@ -63,12 +66,14 @@ public class UIManager : MonoBehaviour
     {
         Player.OnDiamondsCollected += UpdateGemCountHUD;
         Player.OnPlayerHit += RemoveHealthBar;
+        ShopKeeper.OnHasKey += ShowKeyImage;
     }
 
     private void OnDisable()
     {
         Player.OnDiamondsCollected -= UpdateGemCountHUD;
         Player.OnPlayerHit -= RemoveHealthBar;
+        ShopKeeper.OnHasKey -= ShowKeyImage;
     }
 
     private void RemoveHealthBar(int healthUnits)
@@ -88,6 +93,11 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ShowKeyImage()
+    {
+        _keyImage.enabled = true;
     }
 
 

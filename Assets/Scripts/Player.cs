@@ -56,6 +56,19 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        /* TEMP
+         *
+         *
+         * 
+         */
+         
+             CollectDiamonds(10000);
+             
+        /*
+         *
+         * 
+         */
+         
         _animator = GetComponentInChildren<Animator>();
         _collider2D = GetComponent<CapsuleCollider2D>();
         _deathHash = Animator.StringToHash("Death");

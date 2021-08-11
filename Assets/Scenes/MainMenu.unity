@@ -350,7 +350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &239004678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1315,8 +1315,11 @@ MonoBehaviour:
   <HasKey>k__BackingField: 0
   <HasBoots>k__BackingField: 0
   <HasSword>k__BackingField: 0
+  <Diamonds>k__BackingField: 0
+  <Health>k__BackingField: 0
   _newGameDelay: 2
   _pausePanel: {fileID: 3629659414508482200, guid: 111fe19ecb1967c41a8a737d8fbbf4e3, type: 3}
+  position: {x: 0, y: 0, z: 0}
 --- !u!4 &1821962006
 Transform:
   m_ObjectHideFlags: 0
