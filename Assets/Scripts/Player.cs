@@ -40,18 +40,18 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private SpriteRenderer _swordArcSprite;
-    private Vector2 _inputMovement;
+    private Vector2 _moveDirection;
     private Vector3 _localArcPos;
 
     private void Awake()
     {
         // DontDestroyOnLoad(this);
-        // _controls = new PlayerControls();
+        _controls = new PlayerControls();
 
-        // _controls.Player.Move.performed += OnMovement;
-        // _controls.Player.Move.canceled += OnStoppedMoving;
-        // _controls.Player.Attack.performed += OnAttack;
-        // _controls.Player.Jump.performed += OnJump;
+        _controls.Player.Move.performed += OnMove;
+        _controls.Player.Move.canceled += OnMove;
+        _controls.Player.Attack.performed += OnAttack;
+        _controls.Player.Jump.performed += OnJump;
     }
 
     private void Start()
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour, IDamageable
          * 
          */
          
-             CollectDiamonds(10000);
+             // CollectDiamonds(10000);
              
         /*
          *
@@ -91,35 +91,37 @@ public class Player : MonoBehaviour, IDamageable
 
         Debug.DrawRay(transform.position, Vector3.down * _groundCheckDistance, Color.green);
     }
-
-    // public void OnStoppedMoving(InputAction.CallbackContext ctx)
+    
+    // private void OnMove(InputAction.CallbackContext ctx)
     // {
-    //     _rigidbody2D.velocity = Vector2.zero;
-    //     OnPlayerMoved?.Invoke(_rigidbody2D.velocity.x);
+    //     Vector2 input = ctx.ReadValue<Vector2>();
+    //     // _moveDirection = new Vector3(input.x, _moveDirection.y, input.y);
+    //     _rigidbody2D.velocity = new Vector2(input.x * _speed, _rigidbody2D.velocity.y);
     // }
 
-    // public void OnMovement(InputAction.CallbackContext ctx)
-    // {
-    //     _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
-    //
-    //     _inputMovement = ctx.ReadValue<Vector2>();
-    //     var move = _inputMovement.x;
-    //     if (move != 0)
-    //     {
-    //         move = move > 0 ? 1 : -1;
-    //     }
-    //     if (_canMove && IsAlive)
-    //     {
-    //         Debug.Log($"inputMovement X: {move}");
-    //         // Jump();
-    //         
-    //         
-    //         _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
-    //         FlipSprite(move);
-    //         
-    //         OnPlayerMoved?.Invoke(move);
-    //     }
-    // }
+    private void OnMove(InputAction.CallbackContext ctx)
+    {
+        // Debug.Log("Joystick Moved");
+        _canMove = (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) ? true : false;
+    
+        _moveDirection = ctx.ReadValue<Vector2>();
+        // var move = _moveDirection.x;
+        // // if (move != 0)
+        // // {
+        // //     move = move > 0 ? 1 : -1;
+        // // }
+        // if (_canMove && IsAlive)
+        // {
+        //     Debug.Log($"inputMovement X: {move}");
+        //     // Jump();
+        //     
+        //     
+        //     _rigidbody2D.velocity = new Vector2(move * _speed, _rigidbody2D.velocity.y);
+        //     FlipSprite(move);
+        //     
+        //     OnPlayerMoved?.Invoke(move);
+        // }
+    }
 
 
     private void Movement()
@@ -129,9 +131,10 @@ public class Player : MonoBehaviour, IDamageable
         
         if (_canMove && IsAlive)
         {
-            var gamepad = Gamepad.current;
+            // var gamepad = Gamepad.current;
             // float move = Input.GetAxisRaw("Horizontal");
-            float move = gamepad.leftStick.ReadValue().x;
+            // float move = gamepad.leftStick.ReadValue().x;
+            float move = _moveDirection.x;
             Jump();
             
             
@@ -189,19 +192,19 @@ public class Player : MonoBehaviour, IDamageable
     //     _canMove = true;
     // }
 
-    // public void OnJump(InputAction.CallbackContext ctx)
-    // {
-    //     // IsGrounded();
-    //     if (!IsGrounded())
-    //     {
-    //         return;
-    //     }
-    //     _resetJump = false;
-    //     OnPlayerJumping?.Invoke(true);
-    //     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
-    //     // delay routine
-    //     StartCoroutine(JumpDelayRoutine());
-    // }
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        // IsGrounded();
+        if (!IsGrounded())
+        {
+            return;
+        }
+        _resetJump = false;
+        OnPlayerJumping?.Invoke(true);
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+        // delay routine
+        StartCoroutine(JumpDelayRoutine());
+    }
 
     private void Jump()
     {
@@ -291,7 +294,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
-        // _controls.Player.Enable();
+        _controls.Player.Enable();
         AdsManager.OnRewardAdWatched += CollectDiamonds;
         Diamond.OnDiamondCollected += CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved += RemoveDiamonds;
@@ -302,7 +305,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnDisable()
     {
-        // _controls.Player.Disable();
+        _controls.Player.Disable();
         AdsManager.OnRewardAdWatched -= CollectDiamonds;
         Diamond.OnDiamondCollected -= CollectDiamonds;
         ShopKeeper.OnDiamondsRemoved -= RemoveDiamonds;

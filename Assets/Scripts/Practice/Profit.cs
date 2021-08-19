@@ -45,7 +45,7 @@ public class Profit : MonoBehaviour
         }
                 
 
-        Debug.Log(numMonths);
+        // Debug.Log(numMonths);
     }
 
     // Update is called once per frame
